@@ -1,11 +1,16 @@
 fluidPage(  
   sidebarLayout(
     sidebarPanel(
-      numericInput("weeks", "Weeks of data to load:", value = 3, min = 1, max = 100, step = 1),
-      actionButton("download_button", "Load!")
+      dateRangeInput(
+        "daterange", "Select Date Range", 
+        start = max_date - days(7), end = max_date, format = "mm/dd/yy",
+        max = max_date
+      ),
+      actionButton("download_button", "Connect to Live Data!")
     ),
     mainPanel(
-      mapdeckOutput("map")
+      mapdeckOutput("map"),
+      verbatimTextOutput("debug")
     )
   )
 )

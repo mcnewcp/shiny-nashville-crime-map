@@ -6,7 +6,7 @@ function(input, output) {
     isolate({
       withProgress({
         setProgress(message = "Connecting to live data...")
-        get_data(input$weeks, app_token) %>%
+        get_data(input$daterange[1], input$daterange[2], app_token) %>%
           #drop blank coords
           filter(!is.na(longitude) | !is.na(latitude)) %>%
           #drop coord errors (i.e. coords way outside of Nashville)
@@ -45,4 +45,8 @@ function(input, output) {
         tooltip = "tooltip"
       ) 
   })
+  
+  #debug print
+  output$debug <- renderPrint(range(dataSF()$incident_occurred))
+  
 }
