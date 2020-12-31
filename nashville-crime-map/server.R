@@ -33,16 +33,21 @@ function(input, output) {
   
   #generate map
   output$map <- renderMapdeck({
-    mapdeck(token = mapdeck_key, style = mapdeck_style('dark'), pitch = 45)
+    mapdeck(
+      token = mapdeck_key, style = mapdeck_style('dark'), pitch = 45,
+      location = c(-86.77644756173848, 36.164626527074354), zoom = 9.5
+    )
   })
   #update map layer
   observeEvent({aggSF()}, {
     mapdeck_update(map_id = "map") %>%
       add_polygon(
         data = aggSF(),
+        layer_id = "agg_layer",
         fill_colour = "incidents", fill_opacity = 0.5,
-        elevation = "incidents", elevation_scale = 30,
-        tooltip = "tooltip"
+        elevation = "incidents", elevation_scale = 50,
+        tooltip = "tooltip",
+        update_view = FALSE
       ) 
   })
   
