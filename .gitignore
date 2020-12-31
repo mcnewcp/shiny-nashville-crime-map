@@ -3,7 +3,5 @@
 .RData
 .Ruserdata
 
-#RSocrata app token
-app_token.txt
-#mapdeck key
-mapdeck_key.R
+#RSocrata & mapdeck keys
+keys.R

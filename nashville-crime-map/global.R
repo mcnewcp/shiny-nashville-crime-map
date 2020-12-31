@@ -5,9 +5,8 @@ library(lubridate)
 library(sf)
 library(mapdeck)
 
-#load app token for connecting to database
-app_token <- read_tsv("app_token.txt", col_names = FALSE) %>%
-  pull(1)
+source(file.path("keys.R")) #load keys
+
 #function to connect to database
 get_data <- function(n_weeks, app_token) {
   #pull max date
@@ -28,6 +27,5 @@ get_data <- function(n_weeks, app_token) {
   )
 }
 
-source(file.path("mapdeck_key.R")) #load mapdeck key
 #load Nashville census polygon data
 polyLS <- readRDS(gzcon(url("https://github.com/mcnewcp/Nashville-census-tracts/blob/master/Nashville_Census_Polygons_2019.RDS?raw=true")))
