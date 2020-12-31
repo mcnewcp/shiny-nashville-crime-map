@@ -24,11 +24,25 @@ function(input, output) {
   
   #generate aggregated SF
   aggSF <- reactive({
-    polyLS$block_group %>%
-      #count points in each polygon
-      mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
-      #make tooltip
-      mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
+    if (input$map_select == "Census Tract") {
+      polyLS$tract %>%
+        #count points in each polygon
+        mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
+        #make tooltip
+        mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
+    } else if (input$map_select == "Census Block Group") {
+      polyLS$block_group %>%
+        #count points in each polygon
+        mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
+        #make tooltip
+        mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
+    } else if (input$map_select == "Voting District") {
+      polyLS$voting_district %>%
+        #count points in each polygon
+        mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
+        #make tooltip
+        mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
+    }
   })
   
   #generate map
@@ -44,7 +58,7 @@ function(input, output) {
       add_polygon(
         data = aggSF(),
         layer_id = "agg_layer",
-        fill_colour = "incidents", fill_opacity = 0.5,
+        fill_colour = "incidents", fill_opacity = 0.6,
         elevation = "incidents", elevation_scale = 50,
         tooltip = "tooltip",
         update_view = FALSE
@@ -52,6 +66,6 @@ function(input, output) {
   })
   
   #debug print
-  output$debug <- renderPrint(range(dataSF()$incident_occurred))
+  output$debug <- renderPrint(input$map_select)
   
 }
