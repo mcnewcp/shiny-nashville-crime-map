@@ -36,13 +36,19 @@ function(input, output) {
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
         #make tooltip
         mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
-    } else if (input$map_select == "Voting District") {
+    } else {
       polyLS$voting_district %>%
         #count points in each polygon
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
         #make tooltip
         mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
     }
+  })
+  
+  #handle layer opacity
+  layer_opacity <- reactive({
+    #mapdeck doesn't like opacity == 1
+    ifelse(input$opacity == 1, 0.999, input$opacity)
   })
   
   #generate map
@@ -53,12 +59,12 @@ function(input, output) {
     )
   })
   #update map layer
-  observeEvent({aggSF()}, {
+  observe({
     mapdeck_update(map_id = "map") %>%
       add_polygon(
         data = aggSF(),
-        layer_id = "agg_layer",
-        fill_colour = "incidents", fill_opacity = 0.6,
+        layer_id = "mylayer",
+        fill_colour = "incidents", fill_opacity = layer_opacity(),
         elevation = "incidents", elevation_scale = 50,
         tooltip = "tooltip",
         update_view = FALSE
@@ -66,6 +72,6 @@ function(input, output) {
   })
   
   #debug print
-  output$debug <- renderPrint(input$map_select)
+  output$debug <- renderPrint(input$opacity)
   
 }
