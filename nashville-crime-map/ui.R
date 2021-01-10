@@ -26,8 +26,8 @@ fluidPage(
       
     ),
     mainPanel(
-      mapdeckOutput("map"),
-      verbatimTextOutput("debug")
+      mapdeckOutput("map")
+      # verbatimTextOutput("debug")
     )
   )
 )

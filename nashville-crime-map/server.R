@@ -95,7 +95,7 @@ function(input, output) {
     
   })
   
-  #debug print
-  output$debug <- renderPrint(input$map_select)
+  # #debug print
+  # output$debug <- renderPrint(input$map_select)
   
 }
