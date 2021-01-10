@@ -24,13 +24,13 @@ function(input, output) {
   
   #generate aggregated SF
   aggSF <- reactive({
-    if (input$map_select == "Census Tract") {
+    if (input$agg_select == "Census Tract") {
       polyLS$tract %>%
         #count points in each polygon
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
         #make tooltip
         mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
-    } else if (input$map_select == "Census Block Group") {
+    } else if (input$agg_select == "Census Block Group") {
       polyLS$block_group %>%
         #count points in each polygon
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
@@ -58,20 +58,44 @@ function(input, output) {
       location = c(-86.77644756173848, 36.164626527074354), zoom = 9.5
     )
   })
-  #update map layer
+  #update map layer(s)
   observe({
-    mapdeck_update(map_id = "map") %>%
-      add_polygon(
-        data = aggSF(),
-        layer_id = "mylayer",
-        fill_colour = "incidents", fill_opacity = layer_opacity(),
-        elevation = "incidents", elevation_scale = 50,
-        tooltip = "tooltip",
-        update_view = FALSE
-      ) 
+    if (input$map_select == "Individual Points") {
+      mapdeck_update(map_id = "map") %>%
+        clear_polygon(layer_id = "agglayer") %>%
+        add_heatmap(
+          data = dataSF(),
+          layer_id = "heatlayer",
+          update_view = FALSE
+        ) %>%
+        add_scatterplot(
+          data = dataSF(),
+          layer_id = "pointlayer",
+          fill_colour = "#FFFFFF", 
+          radius = 25,
+          tooltip = "tooltip",
+          update_view = FALSE,
+          auto_highlight = TRUE
+        )
+    } else {
+      mapdeck_update(map_id = "map") %>%
+        clear_heatmap("heatlayer") %>%
+        clear_scatterplot("pointlayer") %>%
+        add_polygon(
+          data = aggSF(),
+          layer_id = "agglayer",
+          fill_colour = "incidents", fill_opacity = layer_opacity(),
+          elevation = "incidents", elevation_scale = input$height,
+          tooltip = "tooltip",
+          update_view = FALSE,
+          auto_highlight = TRUE
+        ) 
+    }
+    
+    
   })
   
   #debug print
-  output$debug <- renderPrint(input$opacity)
+  output$debug <- renderPrint(input$map_select)
   
 }
