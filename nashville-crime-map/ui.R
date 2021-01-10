@@ -1,4 +1,5 @@
-fluidPage(theme = shinytheme("darkly"),  
+fluidPage(theme = shinytheme("darkly"), title = "Nashville Crime Data Map", 
+  titlePanel("Nashville Crime Data Map"),
   sidebarLayout(
     sidebarPanel(
       dateRangeInput(
@@ -7,6 +8,7 @@ fluidPage(theme = shinytheme("darkly"),
         max = max_date
       ),
       actionButton("download_button", "Connect to Live Data!"),
+      tagList(br(), br(), "Live data loaded from: ", a("data.nashville.gov", href="https://data.nashville.gov/Police/Metro-Nashville-Police-Department-Incidents/2u6v-ujjs")),
       hr(),
       radioButtons(
         "map_select", "Choose Map View",
@@ -26,7 +28,12 @@ fluidPage(theme = shinytheme("darkly"),
       
     ),
     mainPanel(
-      mapdeckOutput("map", height = '800px')
+      mapdeckOutput("map", height = '800px'),
+      h5("right click + drag to change perspective"),
+      h5("left click + drag to pan"),
+      h5("mouse wheel to zoom"),
+      h5("hover points for details")
+      
       # verbatimTextOutput("debug")
     )
   )
