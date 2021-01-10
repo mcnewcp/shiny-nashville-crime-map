@@ -1,4 +1,4 @@
-fluidPage(  
+fluidPage(theme = shinytheme("darkly"),  
   sidebarLayout(
     sidebarPanel(
       dateRangeInput(
@@ -26,7 +26,7 @@ fluidPage(
       
     ),
     mainPanel(
-      mapdeckOutput("map")
+      mapdeckOutput("map", height = '800px')
       # verbatimTextOutput("debug")
     )
   )
