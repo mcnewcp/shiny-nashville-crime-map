@@ -26,18 +26,21 @@ function(input, output) {
   aggSF <- reactive({
     if (input$agg_select == "Census Tract") {
       polyLS$tract %>%
+        st_set_crs(4326) %>%
         #count points in each polygon
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
         #make tooltip
         mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
     } else if (input$agg_select == "Census Block Group") {
       polyLS$block_group %>%
+        st_set_crs(4326) %>%
         #count points in each polygon
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
         #make tooltip
         mutate(tooltip = paste(name, "<br/>Incident Count:", incidents))
     } else {
       polyLS$voting_district %>%
+        st_set_crs(4326) %>%
         #count points in each polygon
         mutate(incidents = lengths(st_intersects(., dataSF()))) %>%
         #make tooltip
@@ -96,6 +99,6 @@ function(input, output) {
   })
   
   # #debug print
-  # output$debug <- renderPrint(input$map_select)
+  # output$debug <- renderPrint(st_crs(dataSF())==st_crs(polyLS$voting_district))
   
 }
